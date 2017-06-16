@@ -1,0 +1,31 @@
+body {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 16px;
+}
+
+button, select {
+    font-size: 14px;
+}
+
+th, td {
+    border: 1px solid grey;
+    width: 50px;
+}
+
+td {
+    height: 40px;
+    text-align: center;
+}
+
+#prev {
+    margin-left: 3px;
+    margin-right: 20px;
+}
+
+#months {
+    margin-right: 40px;
+}
+
+#years {
+    margin-right: 20px;
+}
