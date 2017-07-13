@@ -11,24 +11,16 @@ function init() {
     let nextButton = document.getElementById("next");
     let calendar = document.getElementById("calendar");
 
-    let myDate = new Date();
-    let dateCell = {
-        day: myDate.getDate(),
-        dayOfWeek: myDate.getDay(),
-        month: myDate.getMonth(),
-        year: myDate.getFullYear(),
-    };
-
-    let createEntry = function(arg) {
+    let createEntry = function(arg1, arg2) {
         let entry = document.createElement("option");
-        entry.setAttribute("value", arg);
-        entry.innerText = arg;
+        entry.setAttribute("value", (arg2 !== undefined ? arg2 : arg1));
+        entry.innerText = arg1;
         return entry;
     }
 
     // fill drop menus
-    MONTH_LIST.forEach(function(elem) {
-        monthMenu.appendChild(createEntry(elem));
+    MONTH_LIST.forEach(function(elem, index) {
+        monthMenu.appendChild(createEntry(elem, index));
     });
 
     for (let i = START_YEAR; i <= END_YEAR; i++) {
@@ -37,35 +29,37 @@ function init() {
 
     // event listeners
     monthMenu.onchange = function(event) {
-        console.log("month changed to " + event.target.value);
+        console.log("Date changed to " + yearMenu.value + " " + event.target.value);
+        render(yearMenu.value, event.target.value);
     }
     yearMenu.onchange = function(event) {
-        console.log("year changed to " + event.target.value);
+        console.log("Date changed to " + event.target.value + " " + monthMenu.value);
+        render(event.target.value, monthMenu.value);
     }
 
     prevButton.onclick = function() {
-        if (monthMenu.value !== MONTH_LIST[0]) {
-            let monthIndex = MONTH_LIST.indexOf(monthMenu.value);
-            monthMenu.value = MONTH_LIST[monthIndex - 1];
-        } else if (monthMenu.value === MONTH_LIST[0] &&
+        if (monthMenu.value !== "0") {
+            monthMenu.value--;
+        } else if (monthMenu.value === "0" &&
                     yearMenu.value > START_YEAR) {
-            monthMenu.value = MONTH_LIST[11];
+            monthMenu.value = "11";
             yearMenu.value--;
         }
+        render(yearMenu.value, monthMenu.value);
     }
 
     nextButton.onclick = function() {
-        if (monthMenu.value !== MONTH_LIST[11]) {
-            let monthIndex = MONTH_LIST.indexOf(monthMenu.value);
-            monthMenu.value = MONTH_LIST[monthIndex + 1];
-        } else if (monthMenu.value === MONTH_LIST[11] &&
+        if (monthMenu.value !== "11") {
+            monthMenu.value++
+        } else if (monthMenu.value === "11" &&
                     yearMenu.value < END_YEAR) {
-            monthMenu.value = MONTH_LIST[0];
+            monthMenu.value = "0";
             yearMenu.value++;
         }
+        render(yearMenu.value, monthMenu.value);
     }
     // Drawing table
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
         let row = document.createElement("tr");
         for (let j = 0; j < 7; j++) {
             row.appendChild(document.createElement("td"));
@@ -77,18 +71,27 @@ function init() {
         let newDate = new Date(year, month);
         let numberOfDays = new Date(year, month + 1, 0).getDate();
         let firstDay = new Date(year, month, 1).getDay();
-        // console.log(newDate); // diagnostics
-        // console.log(numberOfDays); // diagnostics
-        // console.log(firstDay); // diagnostics
+        console.log(newDate); // diagnostics
+        console.log(numberOfDays); // diagnostics
+        console.log(firstDay); // diagnostics
 
         let dateCells = Array.from(document.querySelectorAll("#calendar td"));
         dateCells.forEach(function(elem, index) {
-            // elem.innerText = index;
-        })
-        console.log(dateCells); // diagnostics
+            //elem.innerText = index;
+            elem.innerText = "";
+            if (index >= firstDay && index < firstDay + numberOfDays) {
+                elem.innerText = index - firstDay + 1;
+                console.log(firstDay + numberOfDays);
+            }
+        });
+        //console.log(dateCells); // diagnostics
+
     }
 
-    render(2017, 5);
+    let myDate = new Date();
+    yearMenu.value = myDate.getFullYear();
+    monthMenu.value = myDate.getMonth();
+    render(yearMenu.value, monthMenu.value);
 }
 
 window.onload = init;
