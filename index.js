@@ -30,11 +30,11 @@ function init() {
     // event listeners
     monthMenu.onchange = function(event) {
         console.log("Date changed to " + yearMenu.value + " " + event.target.value);
-        render(yearMenu.value, event.target.value);
+        render(+yearMenu.value, +event.target.value);
     }
     yearMenu.onchange = function(event) {
         console.log("Date changed to " + event.target.value + " " + monthMenu.value);
-        render(event.target.value, monthMenu.value);
+        render(+event.target.value, +monthMenu.value);
     }
 
     prevButton.onclick = function() {
@@ -45,7 +45,7 @@ function init() {
             monthMenu.value = "11";
             yearMenu.value--;
         }
-        render(yearMenu.value, monthMenu.value);
+        render(+yearMenu.value, +monthMenu.value);
     }
 
     nextButton.onclick = function() {
@@ -56,7 +56,7 @@ function init() {
             monthMenu.value = "0";
             yearMenu.value++;
         }
-        render(yearMenu.value, monthMenu.value);
+        render(+yearMenu.value, +monthMenu.value);
     }
     // Drawing table
     for (let i = 0; i < 6; i++) {
@@ -71,27 +71,23 @@ function init() {
         let newDate = new Date(year, month);
         let numberOfDays = new Date(year, month + 1, 0).getDate();
         let firstDay = new Date(year, month, 1).getDay();
-        console.log(newDate); // diagnostics
-        console.log(numberOfDays); // diagnostics
-        console.log(firstDay); // diagnostics
+        //console.log(newDate); // diagnostics
+        console.log(year, month, numberOfDays); // diagnostics
+        //console.log(firstDay); // diagnostics
 
         let dateCells = Array.from(document.querySelectorAll("#calendar td"));
         dateCells.forEach(function(elem, index) {
-            //elem.innerText = index;
             elem.innerText = "";
             if (index >= firstDay && index < firstDay + numberOfDays) {
                 elem.innerText = index - firstDay + 1;
-                console.log(firstDay + numberOfDays);
             }
         });
-        //console.log(dateCells); // diagnostics
-
     }
 
     let myDate = new Date();
     yearMenu.value = myDate.getFullYear();
     monthMenu.value = myDate.getMonth();
-    render(yearMenu.value, monthMenu.value);
+    render(+yearMenu.value, +monthMenu.value);
 }
 
 window.onload = init;
